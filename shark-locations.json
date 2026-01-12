@@ -1,0 +1,69 @@
+{
+  "tourName": "Sharks Way AR Tour",
+  "description": "Discover AR sharks across San Jose during Super Bowl LX",
+  "sharks": [
+    {
+      "id": "shark-1",
+      "title": "Test Shark 1",
+      "description": "First test location",
+      "latitude": 16.475338,
+      "longitude": 81.846102,
+      "icon": "./the-big-game.svg",
+      "sharkeyMessage": "Welcome to Test Location 1! This is your starting point!",
+      "eventInfo": {
+        "name": "The Big Game",
+        "date": "February 9, 2026",
+        "venue": "Test Location 1"
+      }
+    },
+    {
+      "id": "shark-2",
+      "title": "Test Shark 2",
+      "description": "90 meters north",
+      "latitude": 16.476148,
+      "longitude": 81.846102,
+      "icon": "./march-madness.svg",
+      "sharkeyMessage": "You found Test Shark 2! About 90 meters north!",
+      "eventInfo": {
+        "name": "March Madness Watch Party",
+        "date": "March 15-April 6, 2026",
+        "venue": "Test Location 2"
+      }
+    },
+    {
+      "id": "shark-3",
+      "title": "Test Shark 3",
+      "description": "100 meters east",
+      "latitude": 16.475338,
+      "longitude": 81.847002,
+      "icon": "./world-cup.svg",
+      "sharkeyMessage": "Test Shark 3 here! About 100 meters to the east!",
+      "eventInfo": {
+        "name": "World Cup Viewing",
+        "date": "June-July 2026",
+        "venue": "Test Location 3"
+      }
+    },
+    {
+      "id": "shark-4",
+      "title": "Test Shark 4",
+      "description": "80 meters south",
+      "latitude": 16.474618,
+      "longitude": 81.846102,
+      "icon": "./the-big-game.svg",
+      "sharkeyMessage": "Test Shark 4! You're doing great - 80 meters south!",
+      "eventInfo": {
+        "name": "Super Bowl LX Festival",
+        "date": "February 2026",
+        "venue": "Test Location 4"
+      }
+    }
+  ],
+  "settings": {
+    "detectionRadius": 50,
+    "detectionRadiusUnit": "meters",
+    "sharkScale": 0.5,
+    "enableSound": true,
+    "enableVibration": true
+  }
+}

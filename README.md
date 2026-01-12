@@ -1,62 +1,74 @@
-# Sharks Way AR Tour Guide - Phase I
+# Sharks Way AR Tour - Super Bowl LX
 
-## Overview
-AR.js-based tour guide featuring Sharkey as the guide for S26 Events.
-
-## Two Prototypes
-
-### 1. QR/Marker-Based (Quick Demo)
-- **File**: `marker-demo.html`
-- **Trigger**: Hiro marker (printable)
-- **Works**: Indoors/outdoors, no GPS needed
-- **Best for**: Controlled demos, stakeholder presentations
-
-### 2. Location-Based (Phase I Final)
-- **File**: `location-tour.html`
-- **Trigger**: GPS + compass
-- **Features**: Route guidance with map + AR directional arrows
-- **Best for**: Real outdoor tour experience
-
-## Setup Requirements
-
-### Both versions require:
-- **HTTPS hosting** (camera/GPS permissions)
-- Mobile device with camera
-- Modern browser (Safari iOS / Chrome Android)
-
-### Location-based additionally needs:
-- GPS enabled + high accuracy mode
-- Compass calibration
-- Accelerometer + magnetometer sensors
-- **Note**: Won't work on Firefox (compass limitation)
+AR-powered tour guide featuring Sharkey discovering San Jose during Super Bowl LX 2026.
 
 ## Quick Start
 
-### Marker Demo
-1. Print Hiro marker: https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png
-2. Serve `marker-demo.html` over HTTPS
-3. Point camera at marker
+### Marker-Based Demo
+```bash
+python3 -m http.server 8000
+```
+Open: `http://localhost:8000/marker-demo.html`
 
-### Location Tour
-1. Serve `location-tour.html` over HTTPS
-2. Allow camera + location permissions
-3. Enable high accuracy GPS
-4. Calibrate compass (wave phone in figure-8)
-5. Walk to tour stops
+**Requirements:**
+- Print the custom shark marker or use Hiro marker
+- Point camera at marker to see AR shark
 
-## Dummy Event Data
-Currently using hardcoded events:
-- The Big Game (SAP Center)
-- March Madness (Downtown SJ)
-- World Cup Watch Party (San Pedro Square)
+### Location-Based Tour
+Open: `http://localhost:8000/location-tour.html`
 
-## Testing
-- iOS Safari: Recommended for location AR
-- Chrome Android: Works but may need compass calibration
-- Desktop: Camera preview only, no GPS
+**Requirements:**
+- HTTPS hosting (for GPS permissions)
+- Mobile device with GPS + compass
+- Allow location permissions
+
+## Files
+
+- `marker-demo.html` - Marker-based AR demo with custom shark pattern
+- `location-tour.html` - GPS-based AR tour with multiple shark locations
+- `shark-locations.json` - GPS coordinates and data for all shark placements
+- `pattern-shark.patt` - Custom shark marker pattern
+- `plushie_shark.glb` - 3D shark model
+- `dummy-events.json` - Event data for demos
+
+## Documentation
+
+See `/docs` folder for detailed setup instructions and guides.
+
+## Tech Stack
+
+- AR.js (marker + location-based AR)
+- A-Frame (3D rendering)
+- Mapbox GL JS (mapping - coming soon)
+- Vanilla JavaScript
+
+## Architecture
+
+### JSON-Based Shark Placement
+All shark locations are managed in `shark-locations.json`:
+- 5 sharks across San Jose (SAP Center, Downtown, San Pedro Square, City Hall, Convention Center)
+- Each shark has GPS coordinates, title, description, event info, and Sharkey message
+- Easy to add/remove/modify locations without touching code
+
+### Dynamic Loading
+`location-tour.html` dynamically creates AR shark entities from JSON:
+- Fetches shark-locations.json on load
+- Creates A-Frame entities programmatically
+- Fallback to default locations if JSON fails
+
+## Current Status
+
+✅ **Completed:**
+- Marker-based AR with custom shark pattern
+- Location-based AR with JSON data source
+- 5 shark locations across San Jose
+- Dynamic shark entity creation
+- Glass morphism UI with SJ Sharks branding
+- Mobile responsive design
 
 ## Next Steps
-- Replace dummy data with real event API
-- Add more tour stops
-- Enhance Sharkey 3D model
-- Improve route guidance UX
+
+- [ ] Add Mapbox map overlay
+- [ ] Implement gamification (collection tracker)
+- [ ] Add navigation between shark locations
+- [ ] Marker unlock → GPS mode hybrid system

@@ -7,6 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Sharks Way AR - Location Tour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -15,7 +16,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
@@ -398,157 +399,11 @@
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;"
         renderer="logarithmicDepthBuffer: true; precision: medium;">
 
-        <!-- Tour Stop 1: SAP Center -->
-        <a-entity id="stop1" gps-entity-place="latitude: 37.3326; longitude: -121.9010;" look-at="[gps-camera]">
-            <!-- Sharkey mascot -->
-            <a-sphere 
-                position="0 1.5 0" 
-                radius="0.4" 
-                color="#006D75"
-                animation="property: position; to: 0 1.7 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine">
-            </a-sphere>
-            <a-cone 
-                position="-0.45 1.5 0" 
-                radius-bottom="0.2" 
-                radius-top="0" 
-                height="0.4" 
-                color="#006D75"
-                rotation="0 0 90">
-            </a-cone>
-            <a-cone 
-                position="0 1.75 0" 
-                radius-bottom="0.15" 
-                radius-top="0" 
-                height="0.35" 
-                color="#00A9E0">
-            </a-cone>
-            
-            <!-- Platform with rings -->
-            <a-cylinder 
-                position="0 0 0" 
-                radius="0.8" 
-                height="0.15" 
-                color="#F4901E"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
-            </a-cylinder>
-            
-            <a-torus 
-                position="0 0.8 0" 
-                radius="0.6" 
-                radius-tubular="0.04" 
-                color="#00A9E0"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear">
-            </a-torus>
-            
-            <a-text
-                value="SAP Center\nThe Big Game"
-                align="center"
-                color="#FFFFFF"
-                scale="20 20 20"
-                position="0 2.5 0"
-                animation="property: position; to: 0 2.7 0; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine">
-            </a-text>
-        </a-entity>
+        <a-assets>
+            <a-asset-item id="shark-model" src="./plushie_shark.glb"></a-asset-item>
+        </a-assets>
 
-        <!-- Tour Stop 2: Downtown SJ -->
-        <a-entity id="stop2" gps-entity-place="latitude: 37.3382; longitude: -121.8863;" look-at="[gps-camera]">
-            <a-sphere 
-                position="0 1.5 0" 
-                radius="0.4" 
-                color="#006D75"
-                animation="property: position; to: 0 1.7 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine">
-            </a-sphere>
-            <a-cone 
-                position="-0.45 1.5 0" 
-                radius-bottom="0.2" 
-                radius-top="0" 
-                height="0.4" 
-                color="#006D75"
-                rotation="0 0 90">
-            </a-cone>
-            <a-cone 
-                position="0 1.75 0" 
-                radius-bottom="0.15" 
-                radius-top="0" 
-                height="0.35" 
-                color="#00A9E0">
-            </a-cone>
-            
-            <a-cylinder 
-                position="0 0 0" 
-                radius="0.8" 
-                height="0.15" 
-                color="#F4901E"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
-            </a-cylinder>
-            
-            <a-torus 
-                position="0 0.8 0" 
-                radius="0.6" 
-                radius-tubular="0.04" 
-                color="#00A9E0"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear">
-            </a-torus>
-            
-            <a-text
-                value="Downtown SJ\nMarch Madness"
-                align="center"
-                color="#FFFFFF"
-                scale="20 20 20"
-                position="0 2.5 0"
-                animation="property: position; to: 0 2.7 0; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine">
-            </a-text>
-        </a-entity>
-
-        <!-- Tour Stop 3: San Pedro Square -->
-        <a-entity id="stop3" gps-entity-place="latitude: 37.3369; longitude: -121.8936;" look-at="[gps-camera]">
-            <a-sphere 
-                position="0 1.5 0" 
-                radius="0.4" 
-                color="#006D75"
-                animation="property: position; to: 0 1.7 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine">
-            </a-sphere>
-            <a-cone 
-                position="-0.45 1.5 0" 
-                radius-bottom="0.2" 
-                radius-top="0" 
-                height="0.4" 
-                color="#006D75"
-                rotation="0 0 90">
-            </a-cone>
-            <a-cone 
-                position="0 1.75 0" 
-                radius-bottom="0.15" 
-                radius-top="0" 
-                height="0.35" 
-                color="#00A9E0">
-            </a-cone>
-            
-            <a-cylinder 
-                position="0 0 0" 
-                radius="0.8" 
-                height="0.15" 
-                color="#F4901E"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
-            </a-cylinder>
-            
-            <a-torus 
-                position="0 0.8 0" 
-                radius="0.6" 
-                radius-tubular="0.04" 
-                color="#00A9E0"
-                animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear">
-            </a-torus>
-            
-            <a-text
-                value="San Pedro Sq\nWorld Cup"
-                align="center"
-                color="#FFFFFF"
-                scale="20 20 20"
-                position="0 2.5 0"
-                animation="property: position; to: 0 2.7 0; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine">
-            </a-text>
-        </a-entity>
+        <!-- Shark entities will be dynamically created from shark-locations.json -->
 
         <!-- AR Direction Arrow (points to next stop) -->
         <a-cone
@@ -566,33 +421,98 @@
     </a-scene>
 
     <script>
-        const tourStops = [
-            {
-                name: "SAP Center",
-                event: "The Big Game",
-                lat: 37.3326,
-                lng: -121.9010
-            },
-            {
-                name: "Downtown SJ",
-                event: "March Madness",
-                lat: 37.3382,
-                lng: -121.8863
-            },
-            {
-                name: "San Pedro Square",
-                event: "World Cup",
-                lat: 37.3369,
-                lng: -121.8936
-            }
-        ];
-
+        let tourStops = [];
+        let sharkData = null;
         let userLat = null;
         let userLng = null;
         let currentStopIndex = 0;
         let mapExpanded = false;
         let visitedStops = new Set();
         let lastDistance = null;
+
+        // Load shark locations from JSON
+        fetch('./shark-locations.json')
+            .then(response => response.json())
+            .then(data => {
+                sharkData = data;
+                tourStops = data.sharks.map(shark => ({
+                    id: shark.id,
+                    name: shark.title,
+                    event: shark.eventInfo.name,
+                    lat: shark.latitude,
+                    lng: shark.longitude,
+                    description: shark.description,
+                    icon: shark.icon,
+                    sharkeyMessage: shark.sharkeyMessage
+                }));
+                console.log(`✅ Loaded ${tourStops.length} shark locations from JSON`);
+                createSharkEntities();
+            })
+            .catch(error => {
+                console.error('❌ Error loading shark locations:', error);
+                // Fallback to default locations if JSON fails
+                tourStops = [
+                    { name: "SAP Center", event: "The Big Game", lat: 37.3326, lng: -121.9010 },
+                    { name: "Downtown SJ", event: "March Madness", lat: 37.3382, lng: -121.8863 },
+                    { name: "San Pedro Square", event: "World Cup", lat: 37.3369, lng: -121.8936 }
+                ];
+                createSharkEntities();
+            });
+
+        function createSharkEntities() {
+            const scene = document.querySelector('a-scene');
+            
+            tourStops.forEach((stop, index) => {
+                // Create main entity container
+                const entity = document.createElement('a-entity');
+                entity.setAttribute('id', stop.id || `stop${index + 1}`);
+                entity.setAttribute('gps-entity-place', `latitude: ${stop.lat}; longitude: ${stop.lng}`);
+                entity.setAttribute('look-at', '[gps-camera]');
+                
+                // Plushie Shark 3D Model (HEAD FIRST)
+                const sharkModel = document.createElement('a-entity');
+                sharkModel.setAttribute('gltf-model', '#shark-model');
+                sharkModel.setAttribute('position', '0 3 0');
+                sharkModel.setAttribute('rotation', '0 0 0');
+                sharkModel.setAttribute('scale', '2.5 2.5 2.5');
+                sharkModel.setAttribute('animation', 'property: position; to: 0 3.5 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine');
+                sharkModel.setAttribute('animation__rotate', 'property: rotation; to: 0 10 0; dir: alternate; loop: true; dur: 3000; easing: easeInOutSine');
+                entity.appendChild(sharkModel);
+                
+                // Platform (LARGER)
+                const platform = document.createElement('a-cylinder');
+                platform.setAttribute('position', '0 0 0');
+                platform.setAttribute('radius', '2');
+                platform.setAttribute('height', '0.3');
+                platform.setAttribute('color', '#F4901E');
+                platform.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear');
+                entity.appendChild(platform);
+                
+                // Ring (LARGER)
+                const ring = document.createElement('a-torus');
+                ring.setAttribute('position', '0 2 0');
+                ring.setAttribute('radius', '1.8');
+                ring.setAttribute('radius-tubular', '0.1');
+                ring.setAttribute('color', '#00A9E0');
+                ring.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear');
+                entity.appendChild(ring);
+                
+                // Text label BELOW platform (no overlap)
+                const text = document.createElement('a-text');
+                text.setAttribute('id', `text-${stop.id}`);
+                text.setAttribute('value', `${stop.name}\n${stop.event}`);
+                text.setAttribute('align', 'center');
+                text.setAttribute('color', '#00A9E0');
+                text.setAttribute('font', 'https://cdn.aframe.io/fonts/Roboto-msdf.json');
+                text.setAttribute('scale', '12 12 12');
+                text.setAttribute('position', '0 -3.2 0');
+                text.setAttribute('visible', 'false');
+                entity.appendChild(text);
+                
+                scene.appendChild(entity);
+                console.log(`✅ Created shark entity: ${stop.name} at ${stop.lat}, ${stop.lng}`);
+            });
+        }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371e3;
@@ -629,6 +549,24 @@
             
             document.getElementById('next-stop').textContent = 
                 `${nextStop.name}\n${nextStop.event}`;
+
+            // Update text visibility and scale for ALL sharks based on distance
+            tourStops.forEach((stop, index) => {
+                const dist = calculateDistance(userLat, userLng, stop.lat, stop.lng);
+                const textEl = document.querySelector(`#text-${stop.id}`);
+                
+                if (textEl) {
+                    // Only show text within 50 meters
+                    if (dist < 50) {
+                        textEl.setAttribute('visible', 'true');
+                        // Scale from 10 (50m away) to 18 (very close) - more responsive
+                        let scale = 10 + ((50 - dist) / 50) * 8; // 10 to 18
+                        textEl.setAttribute('scale', `${scale} ${scale} ${scale}`);
+                    } else {
+                        textEl.setAttribute('visible', 'false');
+                    }
+                }
+            });
 
             if (distance < 30 && !visitedStops.has(currentStopIndex)) {
                 celebrateArrival(nextStop);
