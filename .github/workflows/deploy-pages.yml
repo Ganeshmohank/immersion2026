@@ -3,8 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
-      - multiple_loc_sharks
+      - '**'  # Deploy from any branch (feature previews)
   workflow_dispatch:
 
 permissions:
