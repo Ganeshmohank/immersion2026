@@ -12,6 +12,15 @@
     <script src="https://unpkg.com/aframe-look-at-component@1.0.0/dist/aframe-look-at-component.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Global variables for touch rotation and zoom
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isDragging = false;
+        let nearestSharkId = null;
+        let sharkRotations = {};
+        let sharkZoomLevels = {};
+    </script>
     <style>
         body {
             margin: 0;
@@ -103,10 +112,28 @@
                 height: 250px;
             }
             #route-info {
-                bottom: 10px;
+                top: 10px;
                 right: 10px;
-                max-width: 160px;
-                padding: 18px;
+                max-width: 150px;
+                padding: 15px;
+            }
+            #rotation-controls {
+                bottom: 20px;
+                right: 30%;
+                transform: translateX(50%);
+                padding: 12px 15px;
+                gap: 10px;
+            }
+            .control-group {
+                gap: 6px;
+            }
+            .rotation-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+            .rotation-row {
+                gap: 6px;
             }
             #route-info h3 {
                 font-size: 14px;
@@ -120,18 +147,9 @@
                 padding: 6px 10px;
                 font-size: 10px;
             }
-            #calibration-warning {
-                top: 10px;
-                right: 10px;
-                max-width: 160px;
-                padding: 8px 12px;
-            }
         }
         @media (max-height: 700px) {
             #header {
-                top: 10px;
-            }
-            #calibration-warning {
                 top: 10px;
             }
         }
@@ -230,18 +248,84 @@
         }
         #route-info {
             position: absolute;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
             background: rgba(0, 109, 117, 0.15);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             color: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 20px;
-            max-width: 200px;
+            max-width: 180px;
             border: 1px solid rgba(0, 169, 224, 0.3);
             box-shadow: 0 8px 32px rgba(0, 109, 117, 0.4),
                         inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        /* Hide A-Frame VR/fullscreen button */
+        .a-enter-vr-button,
+        .a-enter-ar-button,
+        .a-fullscreen-button {
+            display: none !important;
+        }
+        #rotation-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30%;
+            transform: translateX(50%);
+            display: none;
+            flex-direction: row;
+            gap: 15px;
+            pointer-events: auto;
+            background: rgba(0, 109, 117, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 169, 224, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 109, 117, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+        #rotation-controls.active {
+            display: flex;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .rotation-btn {
+            background: rgba(0, 169, 224, 0.9);
+            border: 1px solid rgba(0, 169, 224, 0.4);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(0, 109, 117, 0.4);
+            transition: all 0.2s ease;
+        }
+        .rotation-btn:active {
+            transform: scale(0.9);
+            background: rgba(0, 169, 224, 1);
+        }
+        .rotation-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .zoom-btn {
+            background: rgba(244, 144, 30, 0.9);
+            border: 1px solid rgba(244, 144, 30, 0.4);
+        }
+        .zoom-btn:active {
+            background: rgba(244, 144, 30, 1);
         }
         #route-info h3 {
             margin: 0 0 10px 0;
@@ -297,50 +381,6 @@
         #toggle-map .icon {
             width: 14px;
             height: 14px;
-        }
-        #calibration-warning {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 109, 117, 0.2);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            color: white;
-            padding: 10px 14px;
-            border-radius: 12px;
-            max-width: 200px;
-            font-size: 11px;
-            border: 1px solid rgba(0, 169, 224, 0.4);
-            box-shadow: 0 4px 16px rgba(0, 109, 117, 0.4),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            display: none;
-        }
-        #calibration-warning.show {
-            display: block;
-        }
-        #calibration-warning p {
-            margin: 4px 0;
-            font-size: 11px;
-            line-height: 1.4;
-        }
-        #calibration-warning strong {
-            color: #00A9E0;
-            font-size: 12px;
-        }
-        #dismiss-calibration {
-            background: rgba(0, 169, 224, 0.3);
-            border: 1px solid rgba(0, 169, 224, 0.5);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-family: 'Montserrat', sans-serif;
-            margin-top: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-        #dismiss-calibration:active {
-            background: rgba(0, 169, 224, 0.5);
         }
         #arrival-celebration {
             position: fixed;
@@ -398,14 +438,6 @@
             </p>
         </div>
 
-        <div id="calibration-warning">
-            <p><strong>
-                <svg class="icon" style="width: 14px; height: 14px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4m0 4h.01"/></svg>
-                Calibrate Compass
-            </strong></p>
-            <p>Wave phone in figure-8</p>
-            <button id="dismiss-calibration">Got it</button>
-        </div>
 
         <div id="arrival-celebration">
             <h2 id="celebration-title">
@@ -433,6 +465,21 @@
                         <span>Sharks</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="rotation-controls">
+            <div class="control-group">
+                <button class="rotation-btn" id="rotate-up" title="Tilt Up">↑</button>
+                <div class="rotation-row">
+                    <button class="rotation-btn" id="rotate-left" title="Rotate Left">←</button>
+                    <button class="rotation-btn" id="rotate-right" title="Rotate Right">→</button>
+                </div>
+                <button class="rotation-btn" id="rotate-down" title="Tilt Down">↓</button>
+            </div>
+            <div class="control-group">
+                <button class="rotation-btn zoom-btn" id="zoom-in" title="Zoom In">+</button>
+                <button class="rotation-btn zoom-btn" id="zoom-out" title="Zoom Out">−</button>
             </div>
         </div>
 
@@ -520,16 +567,19 @@
                 entity.setAttribute('id', stop.id || `stop${index + 1}`);
                 entity.setAttribute('gps-entity-place', `latitude: ${stop.lat}; longitude: ${stop.lng}`);
                 
-                // Plushie Shark 3D Model (HEAD FIRST) with distance-based scaling
+                // Plushie Shark 3D Model centered on platform
                 const sharkModel = document.createElement('a-entity');
                 sharkModel.setAttribute('id', `shark-model-${stop.id}`);
                 sharkModel.setAttribute('gltf-model', '#shark-model');
-                sharkModel.setAttribute('position', '0 3 0');
+                sharkModel.setAttribute('position', '0 2 0');
                 sharkModel.setAttribute('rotation', '0 0 0');
                 sharkModel.setAttribute('scale', '1 1 1');
-                sharkModel.setAttribute('animation', 'property: position; to: 0 3.5 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine');
-                sharkModel.setAttribute('animation__rotate', 'property: rotation; to: 0 10 0; dir: alternate; loop: true; dur: 3000; easing: easeInOutSine');
+                sharkModel.setAttribute('animation', 'property: position; to: 0 2 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine');
                 entity.appendChild(sharkModel);
+                
+                // Initialize rotation and zoom tracking
+                sharkRotations[stop.id] = { x: 0, y: 0 };
+                sharkZoomLevels[stop.id] = 0; // Default Z-position (0 = at GPS location)
                 
                 // Platform (LARGER)
                 const platform = document.createElement('a-cylinder');
@@ -549,14 +599,17 @@
                 ring.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear');
                 entity.appendChild(ring);
                 
-                // Text label BELOW platform (no overlap)
+                // Text label BELOW platform (responsive sizing)
                 const text = document.createElement('a-text');
                 text.setAttribute('id', `text-${stop.id}`);
                 text.setAttribute('value', `${stop.name}\n${stop.event}`);
                 text.setAttribute('align', 'center');
                 text.setAttribute('color', '#00A9E0');
                 text.setAttribute('font', 'https://cdn.aframe.io/fonts/Roboto-msdf.json');
-                text.setAttribute('scale', '12 12 12');
+                text.setAttribute('wrap-count', '40');
+                text.setAttribute('width', '8');
+                // Much smaller base scale for mobile readability
+                text.setAttribute('scale', '3 3 3');
                 text.setAttribute('position', '0 -3.2 0');
                 text.setAttribute('visible', 'false');
                 entity.appendChild(text);
@@ -602,6 +655,18 @@
             document.getElementById('next-stop').textContent = 
                 `${nextStop.name}\n${nextStop.event}`;
 
+            // Update nearest shark indicator
+            if (userLat && userLng) {
+                let minDist = Infinity;
+                tourStops.forEach(stop => {
+                    const dist = calculateDistance(userLat, userLng, stop.lat, stop.lng);
+                    if (dist < minDist && dist < 50) {
+                        minDist = dist;
+                        nearestSharkId = stop.id;
+                    }
+                });
+            }
+            
             // Update shark size, text visibility and scale based on GPS distance
             tourStops.forEach((stop, index) => {
                 const dist = calculateDistance(userLat, userLng, stop.lat, stop.lng);
@@ -627,13 +692,16 @@
                     sharkEl.setAttribute('scale', `${sharkScale} ${sharkScale} ${sharkScale}`);
                 }
                 
-                // Text visibility and scaling
+                // Text visibility and responsive scaling
                 if (textEl) {
                     // Only show text within 50 meters
                     if (dist < 50) {
                         textEl.setAttribute('visible', 'true');
-                        // Scale from 10 (50m away) to 18 (very close)
-                        let textScale = 10 + ((50 - dist) / 50) * 8;
+                        // Smaller base scale with gentle distance scaling
+                        const baseScale = 3;
+                        // Distance multiplier: 1x (far) to 1.5x (close)
+                        const distanceFactor = 1 + ((50 - dist) / 50) * 0.5;
+                        let textScale = baseScale * distanceFactor;
                         textEl.setAttribute('scale', `${textScale} ${textScale} ${textScale}`);
                     } else {
                         textEl.setAttribute('visible', 'false');
@@ -758,23 +826,11 @@
             updateMiniMap();
         });
 
-        document.getElementById('dismiss-calibration').addEventListener('click', () => {
-            document.getElementById('calibration-warning').classList.remove('show');
-            localStorage.setItem('calibrationDismissed', 'true');
-        });
-
         window.addEventListener('load', () => {
             console.log('Sharks Way Location Tour loaded');
-            
-            const calibrationDismissed = localStorage.getItem('calibrationDismissed');
-            if (!calibrationDismissed) {
-                setTimeout(() => {
-                    document.getElementById('calibration-warning').classList.add('show');
-                }, 2000);
-            }
+        });    
 
-            setInterval(updateRouteInfo, 1000);
-        });
+        setInterval(updateRouteInfo, 1000);
 
         if ('geolocation' in navigator) {
             navigator.geolocation.watchPosition(
@@ -793,6 +849,164 @@
                 }
             );
         }
+
+        // Touch controls for rotating nearest shark
+        document.addEventListener('touchstart', (evt) => {
+            // Only handle single touch
+            if (evt.touches.length === 1) {
+                isDragging = true;
+                touchStartX = evt.touches[0].clientX;
+                touchStartY = evt.touches[0].clientY;
+                
+                // Find nearest shark
+                if (userLat && userLng) {
+                    let minDist = Infinity;
+                    tourStops.forEach(stop => {
+                        const dist = calculateDistance(userLat, userLng, stop.lat, stop.lng);
+                        if (dist < minDist && dist < 50) {
+                            minDist = dist;
+                            nearestSharkId = stop.id;
+                        }
+                    });
+                }
+            }
+        });
+
+        document.addEventListener('touchmove', (evt) => {
+            if (!isDragging || !nearestSharkId || evt.touches.length !== 1) return;
+            
+            const deltaX = evt.touches[0].clientX - touchStartX;
+            const deltaY = evt.touches[0].clientY - touchStartY;
+            
+            // Update rotation for nearest shark
+            sharkRotations[nearestSharkId].y += deltaX * 0.5;
+            sharkRotations[nearestSharkId].x -= deltaY * 0.3;
+            
+            // Clamp vertical rotation
+            sharkRotations[nearestSharkId].x = Math.max(-45, Math.min(45, sharkRotations[nearestSharkId].x));
+            
+            // Apply rotation to entire entity (shark + text + platform)
+            const entityEl = document.querySelector(`#${nearestSharkId}`);
+            if (entityEl) {
+                entityEl.setAttribute('rotation', {
+                    x: sharkRotations[nearestSharkId].x,
+                    y: sharkRotations[nearestSharkId].y,
+                    z: 0
+                });
+            }
+            
+            touchStartX = evt.touches[0].clientX;
+            touchStartY = evt.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Rotation control buttons
+        const rotationControls = document.getElementById('rotation-controls');
+        
+        document.getElementById('rotate-left').addEventListener('click', () => {
+            if (nearestSharkId && sharkRotations[nearestSharkId]) {
+                sharkRotations[nearestSharkId].y -= 15;
+                updateSharkRotation(nearestSharkId);
+            }
+        });
+        
+        document.getElementById('rotate-right').addEventListener('click', () => {
+            if (nearestSharkId && sharkRotations[nearestSharkId]) {
+                sharkRotations[nearestSharkId].y += 15;
+                updateSharkRotation(nearestSharkId);
+            }
+        });
+        
+        document.getElementById('rotate-up').addEventListener('click', () => {
+            if (nearestSharkId && sharkRotations[nearestSharkId]) {
+                sharkRotations[nearestSharkId].x = Math.min(45, sharkRotations[nearestSharkId].x + 10);
+                updateSharkRotation(nearestSharkId);
+            }
+        });
+        
+        document.getElementById('rotate-down').addEventListener('click', () => {
+            if (nearestSharkId && sharkRotations[nearestSharkId]) {
+                sharkRotations[nearestSharkId].x = Math.max(-45, sharkRotations[nearestSharkId].x - 10);
+                updateSharkRotation(nearestSharkId);
+            }
+        });
+        
+        // Zoom controls - scale entire entity to appear closer/farther
+        document.getElementById('zoom-in').addEventListener('click', () => {
+            if (nearestSharkId && sharkZoomLevels[nearestSharkId] !== undefined) {
+                sharkZoomLevels[nearestSharkId] = Math.min(10, sharkZoomLevels[nearestSharkId] + 2);
+                updateSharkZoom(nearestSharkId);
+                console.log(`Zoom in: ${nearestSharkId} level ${sharkZoomLevels[nearestSharkId]}`);
+            }
+        });
+        
+        document.getElementById('zoom-out').addEventListener('click', () => {
+            if (nearestSharkId && sharkZoomLevels[nearestSharkId] !== undefined) {
+                sharkZoomLevels[nearestSharkId] = Math.max(-5, sharkZoomLevels[nearestSharkId] - 2);
+                updateSharkZoom(nearestSharkId);
+                console.log(`Zoom out: ${nearestSharkId} level ${sharkZoomLevels[nearestSharkId]}`);
+            }
+        });
+        
+        function updateSharkZoom(sharkId) {
+            // Scale the entire entity to simulate zoom (closer/farther)
+            const entityEl = document.querySelector(`#${sharkId}`);
+            if (entityEl && sharkZoomLevels[sharkId] !== undefined) {
+                // Calculate scale factor: 0 = 1x, +10 = 3x, -5 = 0.5x
+                const baseScale = 1.0;
+                const zoomOffset = sharkZoomLevels[sharkId];
+                let scaleFactor;
+                
+                if (zoomOffset >= 0) {
+                    // Zoom in: 1x to 3x (0 to +10)
+                    scaleFactor = baseScale + (zoomOffset / 10) * 2; // 1.0 to 3.0
+                } else {
+                    // Zoom out: 1x to 0.5x (0 to -5)
+                    scaleFactor = baseScale + (zoomOffset / 5) * 0.5; // 1.0 to 0.5
+                }
+                
+                // Apply scale to entire entity
+                entityEl.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+            }
+        }
+        
+        function updateSharkRotation(sharkId) {
+            // Rotate the entire entity (shark + text + platform + ring)
+            const entityEl = document.querySelector(`#${sharkId}`);
+            if (entityEl && sharkRotations[sharkId]) {
+                entityEl.setAttribute('rotation', {
+                    x: sharkRotations[sharkId].x,
+                    y: sharkRotations[sharkId].y,
+                    z: 0
+                });
+            }
+        }
+        
+        // Show/hide rotation controls based on proximity to sharks
+        setInterval(() => {
+            if (userLat && userLng) {
+                let minDist = Infinity;
+                let closestSharkId = null;
+                
+                tourStops.forEach(stop => {
+                    const dist = calculateDistance(userLat, userLng, stop.lat, stop.lng);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestSharkId = stop.id;
+                    }
+                });
+                
+                if (minDist < 50) {
+                    nearestSharkId = closestSharkId;
+                    rotationControls.classList.add('active');
+                } else {
+                    rotationControls.classList.remove('active');
+                }
+            }
+        }, 1000);
     </script>
 </body>
 </html>
