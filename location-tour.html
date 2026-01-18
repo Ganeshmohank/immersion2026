@@ -1169,14 +1169,14 @@
                 entity.setAttribute('shark-visibility-detector', `sharkId: ${stop.id}`);
                 entity.setAttribute('visible', 'false'); // Start hidden, will show when distance check passes
 
-                // Plushie Shark 3D Model centered on platform (elevated higher to avoid camera overlap)
+                // Plushie Shark 3D Model centered on platform (closer to platform)
                 const sharkModel = document.createElement('a-entity');
                 sharkModel.setAttribute('id', `shark-model-${stop.id}`);
                 sharkModel.setAttribute('gltf-model', '#shark-model');
-                sharkModel.setAttribute('position', '0 5 0');
+                sharkModel.setAttribute('position', '0 2 0');
                 sharkModel.setAttribute('rotation', '0 0 0');
                 sharkModel.setAttribute('scale', '0.6 0.6 0.6');
-                sharkModel.setAttribute('animation', 'property: position; to: 0 5.3 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine');
+                sharkModel.setAttribute('animation', 'property: position; to: 0 2.3 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine');
                 entity.appendChild(sharkModel);
 
                 // Initialize rotation and zoom tracking
@@ -1194,7 +1194,7 @@
 
                 // Ring (LARGER) - positioned at shark height
                 const ring = document.createElement('a-torus');
-                ring.setAttribute('position', '0 5 0');
+                ring.setAttribute('position', '0 2 0');
                 ring.setAttribute('radius', '1.8');
                 ring.setAttribute('radius-tubular', '0.1');
                 ring.setAttribute('color', '#00A9E0');
