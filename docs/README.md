@@ -3,7 +3,6 @@
 ## Overview
 AR.js-based tour guide featuring Sharkey as the guide for S26 Events.
 
-## Two Prototypes
 
 ### 1. QR/Marker-Based (Quick Demo)
 - **File**: `marker-demo.html`
